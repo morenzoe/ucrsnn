@@ -40,10 +40,10 @@ void rsnn_update(uint16_t *input_z, int32_t *output_potentials, uint16_t input_s
     }
 }
 
-void apply_leakage(int32_t *potentials, uint16_t n, uint32_t leakage)
+void apply_leakage(int32_t* potentials, uint16_t n, uint32_t leakage)
 {
     int32_t* p = potentials;
-    for (uint16_t i = 0; i < n; ++i)
+    for(uint16_t i = 0; i < n; ++i)
     {
         int32_t newp = *p*leakage;
 		*(p++) = newp>>15;
@@ -61,17 +61,20 @@ void apply_spikes(int32_t *potentials, uint16_t *spikes, int8_t *weights, uint16
     }
 }
 
-void generate_spikes(int32_t *potentials, uint16_t *spikes, uint16_t n, int32_t threshold, uint16_t *spikes_num_p)
+void generate_spikes(int32_t* potentials, uint16_t* spikes, uint16_t n, int32_t threshold, uint16_t* spikes_num_p)
 {
+    int32_t* p = potentials; //membrane potential of the first neuron
+	uint16_t* s = spikes; //spike value of the first neuron
     *spikes_num_p = 0;
-    for (uint16_t i = 0; i < n; ++i)
+    for(uint16_t i = 0; i < n; ++i) // for each neuron
     {
-        if (potentials[i] >= threshold)
+        if(*p >= threshold)
         {
-            spikes[*spikes_num_p] = i;
-            potentials[i] -= threshold;
+            *(s++) = i; //save address
+            *p -= threshold; //reset membrane potential by substracting threshold
             (*spikes_num_p)++;
         }
+        ++p; //increment index of neuron
     }
 }
 
