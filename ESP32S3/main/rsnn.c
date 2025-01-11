@@ -6,13 +6,6 @@
 
 static const char *TAG = "DEPLOY-UCRSNN";
 
-// Neuron state variables
-static int32_t layer0_v[RECURRENT_NEURONS_NUM] = {0}; // membrane potentials
-static uint16_t layer0_z[RECURRENT_NEURONS_NUM] = {0}; // spiking outputs
-static uint16_t layer0_z_num = 0;
-
-static int32_t layer1_v[OUTPUT_NEURONS_NUM] = {0};
-
 // Function implementations
 void rsnn_reset()
 {
@@ -95,12 +88,12 @@ void app_main(void)
     {
         // Generate random input (0 or 1)
         input_z[0] = rand() % 2;
-        ESP_LOGI(TAG, "input_z[0]: %d", input_z[0]); //uint16_t
-
+        
         // Update RSNN
         rsnn_update(input_z, output_potentials, 1, 1, input_z[0] ? 1 : 0);
 
         // Print output
+        ESP_LOGI(TAG, "input_z[0]: %d", input_z[0]); //uint16_t
         ESP_LOGI(TAG, "layer0_v[0]: %ld", layer0_v[0]); //int32_t
         ESP_LOGI(TAG, "layer0_z[0]: %d", layer0_z[0]); //uint16_t
         ESP_LOGI(TAG, "layer1_v[0]: %ld", layer1_v[0]); //int32_t
