@@ -1,14 +1,14 @@
 #include "rsnn.h"
 #include <stdlib.h> // For random numbers
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "esp_log.h"
+#include "freertos/FreeRTOS.h" // For delay function
+#include "freertos/task.h" // For delay function
+#include "esp_log.h" // For logging
 
 static const char *TAG = "DEPLOY-UCRSNN";
 
 // Neuron state variables
-static int32_t layer0_v[RECURRENT_NEURONS_NUM] = {0};
-static uint16_t layer0_z[RECURRENT_NEURONS_NUM] = {0};
+static int32_t layer0_v[RECURRENT_NEURONS_NUM] = {0}; // membrane potentials
+static uint16_t layer0_z[RECURRENT_NEURONS_NUM] = {0}; // spiking outputs
 static uint16_t layer0_z_num = 0;
 
 static int32_t layer1_v[OUTPUT_NEURONS_NUM] = {0};
@@ -49,9 +49,11 @@ void rsnn_update(uint16_t *input_z, int32_t *output_potentials, uint16_t input_s
 
 void apply_leakage(int32_t *potentials, uint16_t n, uint32_t leakage)
 {
+    int32_t* p = potentials;
     for (uint16_t i = 0; i < n; ++i)
     {
-        potentials[i] = (potentials[i] * leakage) >> 15;
+        int32_t newp = *p*leakage;
+		*(p++) = newp>>15;
     }
 }
 
