@@ -19,7 +19,7 @@
 #define WREC_BUFF_SIZE 1 // RECURRENT_NEURONS_NUM * RECURRENT_NEURONS_NUM
 #define WOUT_BUFF_SIZE 1 // OUTPUT_NEURONS_NUM * RECURRENT_NEURONS_NUM
 
-# define T 10 // total timesteps
+# define T 11 // total timesteps
 
 /*****/
 // VARIABLES AND BUFFERS
@@ -42,11 +42,11 @@ int32_t layer1_v[OUTPUT_NEURONS_NUM]; // membrane potentials of output layer
 // Reset all neurons potentials.
 void rsnn_reset(void);
 // Update rsnn applying input spikes (input_z) and generate the output potentials. To be called for each time step.
-void rsnn_update(uint16_t *input_z, int32_t *output_potentials, uint16_t input_size, uint16_t output_size, uint16_t input_z_num);
+void rsnn_update(uint16_t *input_z, int32_t *output_potentials, uint16_t input_size, uint16_t output_size);
 // Apply leakage to all the potentials in the input vector.
 void apply_leakage(int32_t *potentials, uint16_t n, uint32_t leakage);
 // Apply spikes proportional to the weights.
-void apply_spikes(int32_t *potentials, uint16_t *spikes, int8_t *weights, uint16_t n, uint16_t m, uint8_t w_scale);
+void apply_spikes(int32_t *potentials, uint16_t *spikes, int8_t *weights, uint16_t n, uint16_t m, uint8_t w_scale, int32_t threshold);
 // Generate spikes given a firing threshold and reset potentials.
 void generate_spikes(int32_t *potentials, uint16_t *spikes, uint16_t n, int32_t threshold);
 
